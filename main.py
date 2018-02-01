@@ -1,10 +1,10 @@
 import random
-import Segment
+import time
+
 from Painter import Painter
 from Canvas import Canvas
 from Vec2d import Vec2d
 from Stalk import Stalk
-from Segment import Segment
 
 
 def generate_bamboo_quantity():
@@ -24,9 +24,10 @@ def generate_new_root(root):
 
 
 def main():
+    filename = str(int(time.time())) + ".ppm"
     size = 512
     canvas = Canvas(size, size)
-    painter = Painter()
+    ppm_painter = Painter()
 
     quantity = generate_bamboo_quantity()
     newest_root = generate_root_position(size)
@@ -44,17 +45,13 @@ def main():
         stalks.append(new_stalk)
 
     for stalk in stalks:
-        #print(stalk.root.y, end=" ")
         for seg in stalk.segments:
-            #print(seg.get_end().y, end=" ")
             canvas.paint_seg(seg)
         for joint in stalk.joints:
             canvas.paint_joint(joint)
-        #print()
-    #print(len(canvas.pixels), len(canvas.pixels[0]))
 
-    # canvas.paint_seg(Segment(Vec2d(200,0), Vec2d(0.5,1), 100))
-    painter.paint(canvas)
+    ppm_painter.paint_p3(canvas, filename)
+    # ppm_painter.paint_p6(canvas, filename)
 
 
 main()
