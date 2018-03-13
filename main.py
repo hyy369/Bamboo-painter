@@ -46,9 +46,16 @@ def main():
 
     for stalk in stalks:
         for seg in stalk.segments:
-            canvas.paint_seg(seg)
+            canvas.paint_seg_black(seg)
+        for branch in stalk.branches:
+            for seg in branch.segments:
+                canvas.paint_seg_blue(seg)
+            for leaf in branch.leaves:
+                canvas.paint_seg_green(leaf)
+            for joint in branch.joints:
+                canvas.paint_joint_blue(joint)
         for joint in stalk.joints:
-            canvas.paint_joint(joint)
+            canvas.paint_joint_red(joint)
 
     ppm_painter.paint_p3(canvas, filename)
     # ppm_painter.paint_p6(canvas, filename)
