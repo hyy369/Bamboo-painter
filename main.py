@@ -1,7 +1,7 @@
 import random
 import time
 import imageio
-import numpy as np
+# import numpy as np
 
 from Painter import Painter
 from Canvas import Canvas
@@ -22,19 +22,18 @@ def generate_root_position(width):
 
 
 def generate_new_root(root):
-    return Vec2d(root + random.randint(30,60), 0)
+    return Vec2d(root + random.randint(30, 60), 0)
 
 
 def main():
     filename = str(int(time.time())) + ".png"
     size = 512
     canvas = Canvas(size, size)
-    ppm_painter = Painter()
+    png_painter = Painter()
 
     stalk_sprite = imageio.imread('./sprite/stalk-1.png')
     branch_sprite = imageio.imread('./sprite/branch-1.png')
     leaf_sprite = imageio.imread('./sprite/leaf-1.png')
-    print(stalk_sprite[0][0])
 
     quantity = generate_bamboo_quantity()
     newest_root = generate_root_position(size)
@@ -64,12 +63,11 @@ def main():
                 canvas.paint_joint_blue(joint)
             for leaf in branch.leaves:
                 canvas.paint_seg_green(leaf)
-                canvas.paint_seg_sprite(seg, leaf_sprite)
+                canvas.paint_seg_sprite(leaf, leaf_sprite)
         for joint in stalk.joints:
             canvas.paint_joint_red(joint)
 
-    ppm_painter.paint_png(canvas, filename)
-    # ppm_painter.paint_p6(canvas, filename)
+    png_painter.paint_png(canvas, filename)
 
 
 main()

@@ -33,6 +33,7 @@ class Painter:
         file.close()
 
     def paint_png(self, canvas, filename):
+        # Reflect the image vertically
         for i in range(canvas.height // 2):
             canvas.pixels[[i, 511 - i]] = canvas.pixels[[511 - i, i]]
         imageio.imwrite(filename, canvas.pixels)
