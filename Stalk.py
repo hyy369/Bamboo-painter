@@ -6,7 +6,7 @@ from Branch import Branch
 
 class Stalk:
 
-    def __init__(self, root):
+    def __init__(self, root, length):
         self.root = Joint(root.x, root.y, self)
         # self.top = root
         self.top = Joint(root.x, root.y, self)
@@ -16,6 +16,7 @@ class Stalk:
         self.count = 0
         self.direction = Vec2d(0, 1)
         self.bend = random.choice([-1, 1])
+        self.length = length
 
     def grow(self):
         rand_length = random.randint(100, 300)
@@ -40,8 +41,8 @@ class Stalk:
         self.segments.append(new_seg)
         self.count = len(self.segments)
 
-    @staticmethod
-    def decide_grow_branch():
+    def decide_grow_branch(self):
+        if len(self.segments) + 1 == self.length: return False
         i = random.randint(1,10)
         if i <= 4: return True
         else: return False

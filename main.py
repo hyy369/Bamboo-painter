@@ -1,5 +1,7 @@
 import random
 import time
+import imageio
+import numpy as np
 
 from Painter import Painter
 from Canvas import Canvas
@@ -24,10 +26,15 @@ def generate_new_root(root):
 
 
 def main():
-    filename = str(int(time.time())) + ".ppm"
+    filename = str(int(time.time())) + ".png"
     size = 512
     canvas = Canvas(size, size)
     ppm_painter = Painter()
+
+    stalk_sprite = imageio.imread('./sprite/stalk-1.png')
+    branch_sprite = imageio.imread('./sprite/branch-1.png')
+    leaf_sprite = imageio.imread('./sprite/leaf-1.png')
+    print(stalk_sprite[0][0])
 
     quantity = generate_bamboo_quantity()
     newest_root = generate_root_position(size)
@@ -39,25 +46,29 @@ def main():
 
     stalks = list()
     for root in roots:
-        new_stalk = Stalk(root)
-        for j in range(generate_segment_count()):
+        length = generate_segment_count()
+        new_stalk = Stalk(root, length)
+        for j in range(length):
             new_stalk.grow()
         stalks.append(new_stalk)
 
     for stalk in stalks:
         for seg in stalk.segments:
             canvas.paint_seg_black(seg)
+            canvas.paint_seg_sprite(seg, stalk_sprite)
         for branch in stalk.branches:
             for seg in branch.segments:
                 canvas.paint_seg_blue(seg)
-            for leaf in branch.leaves:
-                canvas.paint_seg_green(leaf)
+                canvas.paint_seg_sprite(seg, branch_sprite)
             for joint in branch.joints:
                 canvas.paint_joint_blue(joint)
+            for leaf in branch.leaves:
+                canvas.paint_seg_green(leaf)
+                canvas.paint_seg_sprite(seg, leaf_sprite)
         for joint in stalk.joints:
             canvas.paint_joint_red(joint)
 
-    ppm_painter.paint_p3(canvas, filename)
+    ppm_painter.paint_png(canvas, filename)
     # ppm_painter.paint_p6(canvas, filename)
 
 

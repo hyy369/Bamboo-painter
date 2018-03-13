@@ -1,3 +1,4 @@
+import numpy as np
 from Pixel import Pixel
 
 
@@ -6,27 +7,27 @@ class Canvas:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pixels = []
+        self.pixels = np.ndarray(shape=(width, height, 4), dtype=np.uint8)
         for i in range(height):
-            new_row = []
             for j in range(width):
-                new_row.append(Pixel(1, 1, 1))
-            self.pixels.append(new_row)
+                self.pixels[i][j].fill(255)
+        # print(self.pixels[0][0])
 
-    def paint_pixel(self, x, y, r, g, b):
+    def paint_pixel(self, x, y, r, g, b, a):
         if x < self.width and y < self.height:
-            self.pixels[y][x].set_color(r, g, b)
+            # self.pixels[y][x].set_color(r, g, b)
+            self.pixels[y][x] = [r, g, b, a]
 
     def paint_pixel_black(self, x, y):
-        self.paint_pixel(x, y, 0, 0, 0)
+        self.paint_pixel(x, y, 0, 0, 0, 255)
 
     def paint_pixel_red(self, x, y):
-        self.paint_pixel(x, y, 1, 0, 0)
+        self.paint_pixel(x, y, 255, 0, 0, 255)
 
     def paint_pixel_blue(self, x, y):
-        self.paint_pixel(x, y, 0, 0, 1)
+        self.paint_pixel(x, y, 0, 0, 255, 255)
 
-    def paint_seg(self, seg, r, g, b):
+    def paint_seg(self, seg, r, g, b, a):
         x0 = seg.origin.x
         y0 = seg.origin.y
         x1 = seg.get_end().x
@@ -39,7 +40,7 @@ class Canvas:
         if dx > dy:
             err = dx / 2.0
             while x != x1:
-                self.paint_pixel(x, y, r, g, b)
+                self.paint_pixel(x, y, r, g, b, a)
                 err -= dy
                 if err < 0:
                     y += sy
@@ -48,41 +49,44 @@ class Canvas:
         else:
             err = dy / 2.0
             while y != y1:
-                self.paint_pixel(x, y, r, g, b)
+                self.paint_pixel(x, y, r, g, b, a)
                 err -= dx
                 if err < 0:
                     x += sx
                     err += dy
                 y += sy
-        self.paint_pixel(x, y, r, g, b)
+        self.paint_pixel(x, y, r, g, b, a)
 
     def paint_seg_black(self, seg):
-        self.paint_seg(seg, 0, 0, 0)
+        self.paint_seg(seg, 0, 0, 0, 255)
 
     def paint_seg_green(self, seg):
-        self.paint_seg(seg, 0, 1, 0)
+        self.paint_seg(seg, 0, 255, 0, 255)
 
     def paint_seg_blue(self, seg):
-        self.paint_seg(seg, 0, 0, 1)
+        self.paint_seg(seg, 0, 0, 255, 255)
 
-    def paint_joint(self, joint, r, g, b):
+    def paint_joint(self, joint, r, g, b, a):
         x = joint.position.x
         y = joint.position.y
-        self.paint_pixel(x, y, r, g, b)
-        self.paint_pixel(x+1, y+1, r, g, b)
-        self.paint_pixel(x+1, y-1, r, g, b)
-        self.paint_pixel(x+2, y+2, r, g, b)
-        self.paint_pixel(x+2, y-2, r, g, b)
-        self.paint_pixel(x-1, y+1, r, g, b)
-        self.paint_pixel(x-1, y-1, r, g, b)
-        self.paint_pixel(x-2, y+2, r, g, b)
-        self.paint_pixel(x-2, y-2, r, g, b)
+        self.paint_pixel(x, y, r, g, b, a)
+        self.paint_pixel(x+1, y+1, r, g, b, a)
+        self.paint_pixel(x+1, y-1, r, g, b, a)
+        self.paint_pixel(x+2, y+2, r, g, b, a)
+        self.paint_pixel(x+2, y-2, r, g, b, a)
+        self.paint_pixel(x-1, y+1, r, g, b, a)
+        self.paint_pixel(x-1, y-1, r, g, b, a)
+        self.paint_pixel(x-2, y+2, r, g, b, a)
+        self.paint_pixel(x-2, y-2, r, g, b, a)
 
     def paint_joint_red(self, joint):
-        self.paint_joint(joint, 1, 0, 0)
+        self.paint_joint(joint, 255, 0, 0, 255)
 
     def paint_joint_green(self, joint):
-        self.paint_joint(joint, 0, 1, 0)
+        self.paint_joint(joint, 0, 255, 0, 255)
 
     def paint_joint_blue(self, joint):
-        self.paint_joint(joint, 0, 0, 1)
+        self.paint_joint(joint, 0, 0, 255, 255)
+
+    def paint_seg_sprite(self, seg, sprite):
+        pass
