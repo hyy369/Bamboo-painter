@@ -92,19 +92,23 @@ class Canvas:
     def paint_seg_sprite(self, seg, sprite):
         x_bound = sprite.shape[1] - 1
         y_bound = sprite.shape[0] - 1
-        cos = seg.direction.cosine_angle(Vec2d(0, 1))
-        sin = -math.sqrt(1 - cos) # don't know whether sine is pos or neg
         for y in range(self.height):
             for x in range(self.width):
-                new_coord = rotate(seg.origin, Vec2d(x, y), cos, sin)
+                # transform every pixel to the coord of the sprite
+                new_coord = rotate_to_align(seg.direction, Vec2d(0, 1), seg.origin, Vec2d(x, y))
                 new_coord = stretch(new_coord, seg, sprite.shape[0]/seg.length)
                 new_coord.x -= seg.origin.x - sprite.shape[1] / 2
                 new_coord.y -= seg.origin.y
+
+                # bilinearly sample color and do alpha-composition
                 if new_coord.x < x_bound and new_coord.x > 0 and new_coord.y < y_bound and new_coord.y > 0:
                     self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x])
 
 
-def rotate(origin, point, cos, sin):
+def rotate_to_align(v1, v2, origin, point):
+    """ rotate point around origin so that v1 aligns to v2 """
+    sin = v1.sine_angle(v2)
+    cos = v1.cosine_angle(v2)
     p = point - origin
     result = np.matmul([[cos, -sin], [sin, cos]], [p.x, p.y])
     return Vec2d(result[0], result[1]) + origin
@@ -117,6 +121,7 @@ def stretch(point, seg, scale):
 
 
 def composite(c1, c2):
+    """ alpha-composite color c1 and c2"""
     a1 = c1[3] / 255
     a2 = c2[3] / 255
     r = alpha_composite(c1[0], c2[0], a1, a2)
@@ -128,10 +133,12 @@ def composite(c1, c2):
 
 
 def alpha_composite(ch1, ch2, a1, a2):
+    """ alpha-composite on chanel c1 and c2"""
     return (ch1 * a1 + ch2 * a2 * (1 - a1)) / (a1 + a2 * (1 - a1))
 
 
 def bilinear_sample(point, sprite):
+    """ get the target color using bilinear interpolation"""
     x1 = math.floor(point.x)
     x2 = x1 + 1
     y1 = math.floor(point.y)

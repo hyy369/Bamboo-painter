@@ -8,6 +8,7 @@ class Vec2d:
         self.y = y
 
     def normalize(self):
+        # to be written
         pass
 
     def rotate(self, angle):
@@ -22,12 +23,6 @@ class Vec2d:
     def length(self):
         return math.sqrt(self.sqaured_length())
 
-    def __add__(self, other):
-        return Vec2d(self.x + other.x, self.y + other.y)
-
-    def __sub__(self, other):
-        return Vec2d(self.x - other.x, self.y - other.y)
-
     def dot(self, v2):
         return self.x * v2.x + self.y * v2.y
 
@@ -35,10 +30,14 @@ class Vec2d:
         return self.dot(v2) / (self.length() * v2.length())
 
     def sine_angle(self, v2):
-        return math.sqrt(1 - self.cosine_angle(v2))
+        return self.x * v2.y - v2.x * self.y
 
-    def angle_btw(self, v2):
-        return 180 * math.acos(self.cosine_angle(v2)) / math.pi
+    # override methods
+    def __add__(self, other):
+        return Vec2d(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Vec2d(self.x - other.x, self.y - other.y)
 
 
 

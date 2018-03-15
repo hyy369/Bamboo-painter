@@ -14,25 +14,24 @@ class Stalk:
         self.branches = list()
         self.count = 0
         self.direction = Vec2d(0, 1)
-        self.bend = random.choice([-1, 1])
         self.length = length
 
     def grow(self):
         rand_length = random.randint(100, 300)
         # rand_length = 200
-        rand_angle = random.randint(1, 10)
+        rand_angle = random.randint(-10, 10)
         # rand_angle = 5
         # print("top", self.top.x, self.top.y)
-        new_seg = Segment(self.top.position, self.direction.rotate(rand_angle * self.bend), rand_length)
+        new_seg = Segment(self.top.position, self.direction.rotate(rand_angle), rand_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
         if self.decide_grow_branch():
-            new_branch = Branch(self.top, 1)
+            new_branch = Branch(self.top)
             for j in range(generate_segment_count()):
                 new_branch.grow()
                 self.top.l_branch = new_branch
             self.branches.append(new_branch)
         if self.decide_grow_branch():
-            new_branch = Branch(self.top, -1)
+            new_branch = Branch(self.top)
             for j in range(generate_segment_count()):
                 new_branch.grow()
                 self.top.r_branch = new_branch
@@ -43,10 +42,13 @@ class Stalk:
         self.count = len(self.segments)
 
     def decide_grow_branch(self):
-        if len(self.segments) + 1 == self.length: return False
+        if len(self.segments) + 1 == self.length:
+            return False
         i = random.randint(1,10)
-        if i <= 4: return True
-        else: return False
+        if i <= 4:
+            return True
+        else:
+            return False
 
 
 def generate_segment_count():
