@@ -21,7 +21,7 @@ class Branch:
         rand_leaf_length = random.randint(30, 50)
         new_seg = Segment(self.top.position, self.direction, rand_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
-        new_leaf = Segment(self.top.position, self.random_leaf_angle(), rand_leaf_length)
+        new_leaf = Segment(self.top.position, random_leaf_angle(), rand_leaf_length)
         self.top.l_branch = new_leaf
         self.leaves.append(new_leaf)
         self.joints.append(self.top)
@@ -34,14 +34,14 @@ class Branch:
         rand_angle = random.randint(30, 90)
         new_seg = Segment(self.top.position, self.direction.rotate(rand_angle * self.bend), rand_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
-        new_leaf = Segment(self.top.position, self.random_leaf_angle(), rand_leaf_length)
+        new_leaf = Segment(self.top.position, random_leaf_angle(), rand_leaf_length)
         self.top.l_branch = new_leaf
         self.leaves.append(new_leaf)
         self.joints.append(self.top)
         self.segments.append(new_seg)
         self.count = len(self.segments)
 
-    @staticmethod
-    def random_leaf_angle():
-        return Vec2d(0, 1).rotate(random.randint(135, 225))
+
+def random_leaf_angle():
+    return Vec2d(0, 1).rotate(random.randint(135, 225))
 

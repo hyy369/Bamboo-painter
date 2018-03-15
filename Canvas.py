@@ -93,10 +93,10 @@ class Canvas:
         x_bound = sprite.shape[1] - 1
         y_bound = sprite.shape[0] - 1
         cos = seg.direction.cosine_angle(Vec2d(0, 1))
-        sin = -math.sqrt(1 - cos)
+        sin = -math.sqrt(1 - cos) # don't know whether sine is pos or neg
         for y in range(self.height):
             for x in range(self.width):
-                new_coord = rotate(Vec2d(x, y), cos, sin)
+                new_coord = rotate(seg.origin, Vec2d(x, y), cos, sin)
                 new_coord = stretch(new_coord, seg, sprite.shape[0]/seg.length)
                 new_coord.x -= seg.origin.x - sprite.shape[1] / 2
                 new_coord.y -= seg.origin.y
@@ -104,9 +104,10 @@ class Canvas:
                     self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x])
 
 
-def rotate(point, cos, sin):
-    result = np.matmul([[cos, -sin], [sin, cos]], [point.x, point.y])
-    return Vec2d(result[0], result[1])
+def rotate(origin, point, cos, sin):
+    p = point - origin
+    result = np.matmul([[cos, -sin], [sin, cos]], [p.x, p.y])
+    return Vec2d(result[0], result[1]) + origin
 
 
 def stretch(point, seg, scale):

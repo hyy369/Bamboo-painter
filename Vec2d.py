@@ -22,6 +22,12 @@ class Vec2d:
     def length(self):
         return math.sqrt(self.sqaured_length())
 
+    def __add__(self, other):
+        return Vec2d(self.x + other.x, self.y + other.y)
+
+    def __sub__(self, other):
+        return Vec2d(self.x - other.x, self.y - other.y)
+
     def dot(self, v2):
         return self.x * v2.x + self.y * v2.y
 

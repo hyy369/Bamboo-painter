@@ -8,7 +8,6 @@ class Stalk:
 
     def __init__(self, root, length):
         self.root = Joint(root.x, root.y, self)
-        # self.top = root
         self.top = Joint(root.x, root.y, self)
         self.segments = list()
         self.joints = list()
@@ -19,22 +18,22 @@ class Stalk:
         self.length = length
 
     def grow(self):
-        # rand_length = random.randint(100, 300)
-        rand_length = 200
-        # rand_angle = random.randint(1, 10)
-        rand_angle = 5
+        rand_length = random.randint(100, 300)
+        # rand_length = 200
+        rand_angle = random.randint(1, 10)
+        # rand_angle = 5
         # print("top", self.top.x, self.top.y)
         new_seg = Segment(self.top.position, self.direction.rotate(rand_angle * self.bend), rand_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
         if self.decide_grow_branch():
             new_branch = Branch(self.top, 1)
-            for j in range(self.generate_segment_count()):
+            for j in range(generate_segment_count()):
                 new_branch.grow()
                 self.top.l_branch = new_branch
             self.branches.append(new_branch)
         if self.decide_grow_branch():
             new_branch = Branch(self.top, -1)
-            for j in range(self.generate_segment_count()):
+            for j in range(generate_segment_count()):
                 new_branch.grow()
                 self.top.r_branch = new_branch
             self.branches.append(new_branch)
