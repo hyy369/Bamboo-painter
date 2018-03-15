@@ -19,8 +19,10 @@ class Stalk:
         self.length = length
 
     def grow(self):
-        rand_length = random.randint(100, 300)
-        rand_angle = random.randint(1, 10)
+        # rand_length = random.randint(100, 300)
+        rand_length = 200
+        # rand_angle = random.randint(1, 10)
+        rand_angle = 5
         # print("top", self.top.x, self.top.y)
         new_seg = Segment(self.top.position, self.direction.rotate(rand_angle * self.bend), rand_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
@@ -47,6 +49,6 @@ class Stalk:
         if i <= 4: return True
         else: return False
 
-    @staticmethod
-    def generate_segment_count():
-        return random.randint(1, 2)
+
+def generate_segment_count():
+    return random.randint(1, 2)

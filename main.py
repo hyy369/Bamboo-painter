@@ -10,15 +10,18 @@ from Stalk import Stalk
 
 
 def generate_bamboo_quantity():
-    return random.randint(2, 4)
+    # return random.randint(2, 4)
+    return 1
 
 
 def generate_segment_count():
-    return random.randint(3, 5)
+    # return random.randint(3, 5)
+    return 3
 
 
 def generate_root_position(width):
-    return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), 0)
+    # return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), 0)
+    return Vec2d(256, 0)
 
 
 def generate_new_root(root):
@@ -26,9 +29,12 @@ def generate_new_root(root):
 
 
 def main():
-    filename = str(int(time.time())) + ".png"
+    timestamp = str(int(time.time()))
+    filename1 = timestamp + "_sturcture.png"
+    filename2 = timestamp + "_render.png"
     size = 512
-    canvas = Canvas(size, size)
+    canvas_struct = Canvas(size, size)
+    canvas_render = Canvas(size, size)
     png_painter = Painter()
 
     stalk_sprite = imageio.imread('./sprite/stalk-1.png')
@@ -53,21 +59,25 @@ def main():
 
     for stalk in stalks:
         for seg in stalk.segments:
-            canvas.paint_seg_black(seg)
-            canvas.paint_seg_sprite(seg, stalk_sprite)
+            print(seg.origin.x, seg.origin.y)
+            print(seg.direction.x, seg.direction.y)
+            print(seg.get_end().x, seg.get_end().y)
+            canvas_struct.paint_seg_black(seg)
+            canvas_render.paint_seg_sprite(seg, stalk_sprite)
         for branch in stalk.branches:
             for seg in branch.segments:
-                canvas.paint_seg_blue(seg)
-                canvas.paint_seg_sprite(seg, branch_sprite)
+                canvas_struct.paint_seg_blue(seg)
+                # canvas_render.paint_seg_sprite(seg, branch_sprite)
             for joint in branch.joints:
-                canvas.paint_joint_blue(joint)
+                canvas_struct.paint_joint_blue(joint)
             for leaf in branch.leaves:
-                canvas.paint_seg_green(leaf)
-                canvas.paint_seg_sprite(leaf, leaf_sprite)
+                canvas_struct.paint_seg_green(leaf)
+                # canvas_render.paint_seg_sprite(leaf, leaf_sprite)
         for joint in stalk.joints:
-            canvas.paint_joint_red(joint)
+            canvas_struct.paint_joint_red(joint)
 
-    png_painter.paint_png(canvas, filename)
+    png_painter.paint_png(canvas_struct, filename1)
+    png_painter.paint_png(canvas_render, filename2)
 
 
 main()
