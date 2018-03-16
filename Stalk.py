@@ -19,7 +19,7 @@ class Stalk:
     def grow(self):
         rand_length = random.randint(100, 300)
         # rand_length = 200
-        rand_angle = random.randint(-10, 10)
+        rand_angle = random.randint(-5, 5)
         # rand_angle = 5
         # print("top", self.top.x, self.top.y)
         new_seg = Segment(self.top.position, self.direction.rotate(rand_angle), rand_length)

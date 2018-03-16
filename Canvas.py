@@ -96,7 +96,7 @@ class Canvas:
             for x in range(self.width):
                 # transform every pixel to the coord of the sprite
                 new_coord = rotate_to_align(seg.direction, Vec2d(0, 1), seg.origin, Vec2d(x, y))
-                new_coord = stretch(new_coord, seg, sprite.shape[0]/seg.length)
+                new_coord = stretch(new_coord, seg, sprite.shape[0]/abs(seg.origin.y - seg.get_end().y))
                 new_coord.x -= seg.origin.x - sprite.shape[1] / 2
                 new_coord.y -= seg.origin.y
 
