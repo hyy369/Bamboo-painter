@@ -18,6 +18,12 @@ class Vec2d:
         self.y = self.x * math.sin(rad) + self.y * math.cos(rad)
         return self
 
+    def static_rotate(self, angle):
+        rad = angle * math.pi / 180
+        x = self.x * math.cos(rad) - self.y * math.sin(rad)
+        y = self.x * math.sin(rad) + self.y * math.cos(rad)
+        return Vec2d(x, y)
+
     def sqaured_length(self):
         return self.x * self.x + self.y * self.y
 
