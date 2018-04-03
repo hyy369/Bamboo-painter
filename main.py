@@ -78,7 +78,7 @@ def main():
 
 def generate_bamboo_quantity():
     # return random.randint(2, 4)
-    return 1
+    return 3
 
 
 def generate_segment_count():
@@ -87,12 +87,12 @@ def generate_segment_count():
 
 
 def generate_root_position(width):
-    return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), 0)
+    return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), -10)
     # return Vec2d(256, 0)
 
 
 def generate_new_root(root):
-    return Vec2d(root + random.randint(30, 60), 0)
+    return Vec2d(root + random.randint(30, 60), -10)
 
 
 def get_stalk_sprite_index():
