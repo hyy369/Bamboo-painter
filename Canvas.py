@@ -89,6 +89,7 @@ class Canvas:
         self.paint_joint(joint, 0, 0, 255, 255)
 
     def paint_seg_sprite(self, seg, sprite, shade):
+        # apply_shade(sprite, shade)
         x_bound = sprite.shape[1] - 1
         y_bound = sprite.shape[0] - 1
         for y in range(self.height):
@@ -103,11 +104,12 @@ class Canvas:
 
                 # bilinearly sample color and do alpha-composition
                 if new_coord.x < x_bound and new_coord.x > 0 and new_coord.y < y_bound and new_coord.y > 0:
-                    self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x])
-                    self.pixels[y][x] = composite(self.pixels[y][x], [255, 255, 255, 255 * shade])
+                    self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x], shade)
+                    # self.pixels[y][x] = composite([255, 255, 255, 255 * shade], self.pixels[y][x])
 
     def paint_seal(self, sprite):
-        x = 320
+        # x = 320
+        x = 960
         y = 180
         for q in range(90):
             for p in range(90):
@@ -137,9 +139,9 @@ def stretch_x(point, seg, scale):
     return Vec2d(x, point.y)
 
 
-def composite(c1, c2):
+def composite(c1, c2, shade):
     """ alpha-composite color c1 and c2"""
-    a1 = c1[3] / 255
+    a1 = c1[3] * shade / 255
     a2 = c2[3] / 255
     r = alpha_composite(c1[0], c2[0], a1, a2)
     g = alpha_composite(c1[1], c2[1], a1, a2)
@@ -166,3 +168,12 @@ def bilinear_sample(point, sprite):
     b = sprite[y2][x1] * (1 - dx) + sprite[y2][x2] * dx
     result = a * (1 - dy) + b * dy
     return result
+
+
+def apply_shade(sprite, shade):
+    for y in range(sprite.shape[0]):
+        for x in range(sprite.shape[1]):
+            # sprite[y][x][0] = 255 - int((255 - sprite[y][x][0]) * shade)
+            # sprite[y][x][1] = 255 - int((255 - sprite[y][x][1]) * shade)
+            # sprite[y][x][2] = 255 - int((255 - sprite[y][x][2]) * shade)
+            sprite[y][x][3] = int(255 * shade)

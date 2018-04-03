@@ -14,7 +14,7 @@ def main():
     timestamp = str(int(time.time()))
     filename1 = "./sample_output/" + timestamp + "_sturcture.png"
     filename2 = "./sample_output/" + timestamp + "_render.png"
-    width = 480
+    width = 1160
     height = 720
     canvas_struct = Canvas(width, height)
     canvas_render = Canvas(width, height)
@@ -28,8 +28,8 @@ def main():
 
     print("Constructing...")
 
-    quantity = generate_bamboo_quantity()
-    newest_root = generate_root_position(width)
+    quantity = get_bamboo_quantity()
+    newest_root = get_root_position(width)
     roots = list()
     roots.append(newest_root)
     for i in range(quantity - 1):
@@ -38,7 +38,7 @@ def main():
 
     stalks = list()
     for root in roots:
-        length = generate_segment_count()
+        length = get_segment_count()
         new_stalk = Stalk(root, length)
         for j in range(length):
             new_stalk.grow()
@@ -76,23 +76,23 @@ def main():
     png_painter.paint_png(canvas_render, filename2)
 
 
-def generate_bamboo_quantity():
+def get_bamboo_quantity():
     # return random.randint(2, 4)
     return 3
 
 
-def generate_segment_count():
+def get_segment_count():
     return random.randint(3, 4)
     # return 3
 
 
-def generate_root_position(width):
+def get_root_position(width):
     return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), -10)
     # return Vec2d(256, 0)
 
 
 def generate_new_root(root):
-    return Vec2d(root + random.randint(30, 60), -10)
+    return Vec2d(root + random.randint(100, 200), -10)
 
 
 def get_stalk_sprite_index():
@@ -108,7 +108,7 @@ def get_leaf_sprite_index():
 
 
 def get_shade_degree():
-    return random.randint(7, 10) / 10
+    return random.choice([1.0, 0.9, 0.8, 0.85, 0.6])
 
 
 main()
