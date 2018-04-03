@@ -8,15 +8,14 @@ class Canvas:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.pixels = np.ndarray(shape=(width, height, 4), dtype=np.uint8)
+        self.pixels = np.ndarray(shape=(height, width, 4), dtype=np.uint8)
         for i in range(height):
             for j in range(width):
                 self.pixels[i][j].fill(255)
         # print(self.pixels[0][0])
 
     def paint_pixel(self, x, y, r, g, b, a):
-        if x < self.width and y < self.height:
-            # self.pixels[y][x].set_color(r, g, b)
+        if x in range(0, self.width) and y in range(0, self.height):
             self.pixels[y][x] = [r, g, b, a]
 
     def paint_pixel_black(self, x, y):
@@ -89,20 +88,32 @@ class Canvas:
     def paint_joint_blue(self, joint):
         self.paint_joint(joint, 0, 0, 255, 255)
 
-    def paint_seg_sprite(self, seg, sprite):
+    def paint_seg_sprite(self, seg, sprite, shade):
         x_bound = sprite.shape[1] - 1
         y_bound = sprite.shape[0] - 1
         for y in range(self.height):
             for x in range(self.width):
                 # transform every pixel to the coord of the sprite
                 new_coord = rotate_to_align(seg.direction, Vec2d(0, 1), seg.origin, Vec2d(x, y))
-                new_coord = stretch(new_coord, seg, sprite.shape[0]/abs(seg.origin.y - seg.get_end().y))
+                # new_coord = stretch(new_coord, seg, sprite.shape[0]/abs(seg.origin.y - seg.get_end().y))
+                new_coord = stretch_y(new_coord, seg, sprite.shape[0] / seg.length)
+                # new_coord = stretch_x(new_coord, seg, 0.4)
                 new_coord.x -= seg.origin.x - sprite.shape[1] / 2
                 new_coord.y -= seg.origin.y
 
                 # bilinearly sample color and do alpha-composition
                 if new_coord.x < x_bound and new_coord.x > 0 and new_coord.y < y_bound and new_coord.y > 0:
                     self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x])
+                    self.pixels[y][x] = composite(self.pixels[y][x], [255, 255, 255, 255 * shade])
+
+    def paint_seal(self, sprite):
+        x = 320
+        y = 180
+        for q in range(90):
+            for p in range(90):
+                self.pixels[y + q][x + p][0] = sprite[89 - q][p][0]
+                self.pixels[y + q][x + p][1] = sprite[89 - q][p][1]
+                self.pixels[y + q][x + p][2] = sprite[89 - q][p][2]
 
 
 def rotate_to_align(v1, v2, origin, point):
@@ -114,10 +125,16 @@ def rotate_to_align(v1, v2, origin, point):
     return Vec2d(result[0], result[1]) + origin
 
 
-def stretch(point, seg, scale):
+def stretch_y(point, seg, scale):
     dy = (point.y - seg.origin.y) * scale
     y = seg.origin.y + dy
     return Vec2d(point.x, y)
+
+
+def stretch_x(point, seg, scale):
+    dx = (point.x - seg.origin.x) * scale
+    x = seg.origin.x + dx
+    return Vec2d(x, point.y)
 
 
 def composite(c1, c2):
@@ -134,7 +151,7 @@ def composite(c1, c2):
 
 def alpha_composite(ch1, ch2, a1, a2):
     """ alpha-composite on chanel c1 and c2"""
-    return (ch1 * a1 + ch2 * a2 * (1 - a1)) / (a1 + a2 * (1 - a1))
+    return int((ch1 * a1 + ch2 * a2 * (1 - a1)) / (a1 + a2 * (1 - a1)))
 
 
 def bilinear_sample(point, sprite):
