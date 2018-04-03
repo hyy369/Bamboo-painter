@@ -3,6 +3,10 @@ import math
 from Vec2d import Vec2d
 
 
+SEAL_X = 180
+SEAL_Y = 180
+
+
 class Canvas:
 
     def __init__(self, width, height):
@@ -89,7 +93,6 @@ class Canvas:
         self.paint_joint(joint, 0, 0, 255, 255)
 
     def paint_seg_sprite(self, seg, sprite, shade):
-        # apply_shade(sprite, shade)
         x_bound = sprite.shape[1] - 1
         y_bound = sprite.shape[0] - 1
         for y in range(self.height):
@@ -105,12 +108,10 @@ class Canvas:
                 # bilinearly sample color and do alpha-composition
                 if new_coord.x < x_bound and new_coord.x > 0 and new_coord.y < y_bound and new_coord.y > 0:
                     self.pixels[y][x] = composite(bilinear_sample(new_coord, sprite), self.pixels[y][x], shade)
-                    # self.pixels[y][x] = composite([255, 255, 255, 255 * shade], self.pixels[y][x])
 
     def paint_seal(self, sprite):
-        # x = 320
-        x = 960
-        y = 180
+        x = SEAL_X
+        y = SEAL_Y
         for q in range(90):
             for p in range(90):
                 self.pixels[y + q][x + p][0] = sprite[89 - q][p][0]
@@ -140,7 +141,7 @@ def stretch_x(point, seg, scale):
 
 
 def composite(c1, c2, shade):
-    """ alpha-composite color c1 and c2"""
+    """ alpha-composite color c1 and c2 """
     a1 = c1[3] * shade / 255
     a2 = c2[3] / 255
     r = alpha_composite(c1[0], c2[0], a1, a2)
@@ -152,12 +153,12 @@ def composite(c1, c2, shade):
 
 
 def alpha_composite(ch1, ch2, a1, a2):
-    """ alpha-composite on chanel c1 and c2"""
+    """ alpha-composite on chanel c1 and c2 """
     return int((ch1 * a1 + ch2 * a2 * (1 - a1)) / (a1 + a2 * (1 - a1)))
 
 
 def bilinear_sample(point, sprite):
-    """ get the target color using bilinear interpolation"""
+    """ get the target color using bilinear interpolation """
     x1 = math.floor(point.x)
     x2 = x1 + 1
     y1 = math.floor(point.y)
@@ -169,11 +170,3 @@ def bilinear_sample(point, sprite):
     result = a * (1 - dy) + b * dy
     return result
 
-
-def apply_shade(sprite, shade):
-    for y in range(sprite.shape[0]):
-        for x in range(sprite.shape[1]):
-            # sprite[y][x][0] = 255 - int((255 - sprite[y][x][0]) * shade)
-            # sprite[y][x][1] = 255 - int((255 - sprite[y][x][1]) * shade)
-            # sprite[y][x][2] = 255 - int((255 - sprite[y][x][2]) * shade)
-            sprite[y][x][3] = int(255 * shade)

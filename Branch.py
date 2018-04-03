@@ -38,7 +38,7 @@ class Branch:
     def grow_first_seg(self, side):
         seg_length = random_seg_length()
         leaf_length = random_leaf_length()
-        seg_angle = random.randint(30, 85) * side
+        seg_angle = random_branch_angle() * side
         new_seg = Segment(self.top.position, self.direction.rotate(seg_angle), seg_length)
         self.top = Joint(new_seg.get_end().x, new_seg.get_end().y, new_seg)
 
@@ -55,9 +55,19 @@ class Branch:
         self.segments.append(new_seg)
         self.count = len(self.segments)
 
+    def grow_tip_leaf(self):
+        leaf_length = random_leaf_length()
+        leaf = Segment(self.top.position, self.direction, leaf_length)
+        self.top.l_branch = leaf
+        self.leaves.append(leaf)
+
     def get_segment(self):
         length = (self.segments[len(self.segments)-1].get_end() - self.root.position).length()
         return Segment(self.root.position, self.direction, length)
+
+
+def random_branch_angle():
+    return random.randint(30, 70)
 
 
 def random_leaf_angle():

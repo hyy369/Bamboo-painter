@@ -8,16 +8,17 @@ from Canvas import Canvas
 from Vec2d import Vec2d
 from Stalk import Stalk
 
+IMAGE_WIDTH = 1160
+IMAGE_HEIGHT = 720
+
 
 def main():
     # Initializations
     timestamp = str(int(time.time()))
     filename1 = "./sample_output/" + timestamp + "_sturcture.png"
     filename2 = "./sample_output/" + timestamp + "_render.png"
-    width = 1160
-    height = 720
-    canvas_struct = Canvas(width, height)
-    canvas_render = Canvas(width, height)
+    canvas_struct = Canvas(IMAGE_WIDTH, IMAGE_HEIGHT)
+    canvas_render = Canvas(IMAGE_WIDTH, IMAGE_HEIGHT)
     png_painter = Painter()
 
     # Read sprites
@@ -27,13 +28,15 @@ def main():
     seal_sprite = imageio.imread('./sprite/seal-90.png')
 
     print("Constructing...")
+    t0 = time.clock()
 
+    # start construction
     quantity = get_bamboo_quantity()
-    newest_root = get_root_position(width)
+    newest_root = get_root_position(IMAGE_WIDTH)
     roots = list()
     roots.append(newest_root)
     for i in range(quantity - 1):
-        newest_root = generate_new_root(newest_root.x)
+        newest_root = get_new_root(newest_root.x)
         roots.append(newest_root)
 
     stalks = list()
@@ -44,6 +47,10 @@ def main():
             new_stalk.grow()
         stalks.append(new_stalk)
 
+    t1 = time.clock() - t0
+    print("Construction time", t1, "seconds.")
+
+    # start rendering
     stalk_count = 1
     stalk_total = len(stalks)
     for stalk in stalks:
@@ -71,14 +78,24 @@ def main():
 
     canvas_render.paint_seal(seal_sprite)
 
+    print("Rendering time", time.clock() - t1, "seconds.")
     print("Saving images...")
     png_painter.paint_png(canvas_struct, filename1)
     png_painter.paint_png(canvas_render, filename2)
 
 
 def get_bamboo_quantity():
-    # return random.randint(2, 4)
-    return 3
+    i = random.randint(1, 100)
+    if i <= 6:
+        return 1
+    elif 6 < i <= 44:
+        return 2
+    elif 44 < i <= 74:
+        return 3
+    elif 74 < i <= 88:
+        return 4
+    elif 88 < i <= 100:
+        return 5
 
 
 def get_segment_count():
@@ -91,7 +108,7 @@ def get_root_position(width):
     # return Vec2d(256, 0)
 
 
-def generate_new_root(root):
+def get_new_root(root):
     return Vec2d(root + random.randint(100, 200), -10)
 
 
@@ -108,7 +125,7 @@ def get_leaf_sprite_index():
 
 
 def get_shade_degree():
-    return random.choice([1.0, 0.9, 0.8, 0.85, 0.6])
+    return random.choice([1.0, 0.9, 0.8, 0.6])
 
 
 main()

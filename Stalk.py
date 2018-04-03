@@ -28,7 +28,8 @@ class Stalk:
             self.branch_side *= -1
             for j in range(get_segment_count()):
                 new_branch.grow()
-                self.top.l_branch = new_branch
+            new_branch.grow_tip_leaf()
+            self.top.l_branch = new_branch
             self.branches.append(new_branch)
         # if self.decide_grow_branch():
         #     new_branch = Branch(self.top)
@@ -43,8 +44,8 @@ class Stalk:
     def decide_grow_branch(self):
         if len(self.segments) + 1 == self.length:
             return False
-        i = random.randint(1, 10)
-        if i <= 4:
+        i = random.randint(1, 100)
+        if i <= 35:
             return True
         else:
             return False
