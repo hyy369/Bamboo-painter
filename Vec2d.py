@@ -8,8 +8,9 @@ class Vec2d:
         self.y = y
 
     def normalize(self):
-        # to be written
-        pass
+        self.x = self.x / self.length()
+        self.y = self.y / self.length()
+        return self
 
     def rotate(self, angle):
         rad = angle * math.pi / 180

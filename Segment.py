@@ -6,7 +6,7 @@ class Segment:
 
     def __init__ (self, origin, direction, length):
         self.origin = Vec2d(origin.x, origin.y)
-        self.direction = Vec2d(direction.x, direction.y)
+        self.direction = Vec2d(direction.x, direction.y).normalize()
         self.length = length
 
     def get_end(self):
