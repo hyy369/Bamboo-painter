@@ -52,7 +52,7 @@ class Stalk:
 
 
 def get_segment_count():
-    return random.randint(3, 5)
+    return random.randint(6, 10)
 
 
 def get_segment_length():

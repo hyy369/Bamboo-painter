@@ -14,6 +14,7 @@ class Branch:
         self.leaves = list()
         self.count = 0
         self.direction = Vec2d(0, 1)
+        self.leaf_side = 1
         self.grow_first_seg(side)
 
     def grow(self):
@@ -24,12 +25,13 @@ class Branch:
 
         # grow one leaf to each side at the joint
         leaf_angle = random_leaf_angle()
-        left_leaf = Segment(self.top.position, self.direction.static_rotate(leaf_angle), leaf_length)
-        right_leaf = Segment(self.top.position, self.direction.static_rotate(-leaf_angle), leaf_length)
-        self.top.l_branch = left_leaf
-        self.top.r_branch = right_leaf
-        self.leaves.append(left_leaf)
-        self.leaves.append(right_leaf)
+        leaf = Segment(self.top.position, self.direction.static_rotate(leaf_angle * self.leaf_side), leaf_length)
+        self.leaf_side *= -1
+        # right_leaf = Segment(self.top.position, self.direction.static_rotate(-leaf_angle), leaf_length)
+        self.top.l_branch = leaf
+        # self.top.r_branch = right_leaf
+        self.leaves.append(leaf)
+        # self.leaves.append(right_leaf)
 
         self.joints.append(self.top)
         self.segments.append(new_seg)
@@ -44,12 +46,13 @@ class Branch:
 
         # grow one leaf to each side at the joint
         leaf_angle = random_leaf_angle()
-        left_leaf = Segment(self.top.position, self.direction.static_rotate(leaf_angle), leaf_length)
-        right_leaf = Segment(self.top.position, self.direction.static_rotate(-leaf_angle), leaf_length)
-        self.top.l_branch = left_leaf
-        self.top.r_branch = right_leaf
-        self.leaves.append(left_leaf)
-        self.leaves.append(right_leaf)
+        leaf = Segment(self.top.position, self.direction.static_rotate(leaf_angle * self.leaf_side), leaf_length)
+        self.leaf_side *= -1
+        # right_leaf = Segment(self.top.position, self.direction.static_rotate(-leaf_angle), leaf_length)
+        self.top.l_branch = leaf
+        # self.top.r_branch = right_leaf
+        self.leaves.append(leaf)
+        # self.leaves.append(right_leaf)
 
         self.joints.append(self.top)
         self.segments.append(new_seg)
@@ -67,7 +70,7 @@ class Branch:
 
 
 def random_branch_angle():
-    return random.randint(30, 70)
+    return random.randint(30, 85)
 
 
 def random_leaf_angle():
@@ -79,5 +82,5 @@ def random_leaf_length():
 
 
 def random_seg_length():
-    return random.randint(40, 80)
+    return random.randint(20, 40)
 

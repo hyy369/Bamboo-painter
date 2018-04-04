@@ -14,8 +14,10 @@ class Vec2d:
 
     def rotate(self, angle):
         rad = angle * math.pi / 180
-        self.x = self.x * math.cos(rad) - self.y * math.sin(rad)
-        self.y = self.x * math.sin(rad) + self.y * math.cos(rad)
+        x = self.x * math.cos(rad) - self.y * math.sin(rad)
+        y = self.x * math.sin(rad) + self.y * math.cos(rad)
+        self.x = x
+        self.y = y
         return self
 
     def static_rotate(self, angle):

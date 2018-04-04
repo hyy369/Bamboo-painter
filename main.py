@@ -57,9 +57,6 @@ def main():
         print("Rendering stalk", stalk_count, "/", stalk_total)
         shade = get_shade_degree()
         for seg in stalk.segments:
-            # print(seg.origin.x, seg.origin.y)
-            # print(seg.direction.x, seg.direction.y)
-            # print(seg.get_end().x, seg.get_end().y)
             canvas_struct.paint_seg_black(seg)
             canvas_render.paint_seg_sprite(seg, stalk_sprite[get_stalk_sprite_index()], shade)
 
@@ -100,12 +97,10 @@ def get_bamboo_quantity():
 
 def get_segment_count():
     return random.randint(3, 4)
-    # return 3
 
 
 def get_root_position(width):
     return Vec2d(random.randint(int(0.33 * width), int(0.5 * width)), -10)
-    # return Vec2d(256, 0)
 
 
 def get_new_root(root):
